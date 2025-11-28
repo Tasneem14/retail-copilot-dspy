@@ -1,6 +1,6 @@
 # Hybrid RAG + NL2SQL Agent (LangGraph + DSPy)
 
-## Graph Design (2–4 bullets)
+## Graph Design 
 - The agent uses a **Router → (RAG / SQL / Hybrid)** structure: questions are classified into the correct path using a DSPy classifier.  
 - **RAG path:** retrieves top document chunks and passes them to a Planner that extracts KPIs, dates, and categories.  
 - **SQL path:** uses an NL2SQL module to generate a single valid SQLite query, followed by an Executor + Repair loop for validation.  
