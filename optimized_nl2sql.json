@@ -1,0 +1,157 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "question": "Find the average order value in 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"aov\", \"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) / COUNT(DISTINCT o.OrderID) AS aov FROM `Order Details` od JOIN Orders o ON o.OrderID = od.OrderID WHERE o.OrderDate >= '1997-01-01' AND o.OrderDate < '1998-01-01';"
+      },
+      {
+        "question": "Which month in 1997 had the highest revenue?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\",\"group_by\":\"month\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT strftime('%Y-%m',o.OrderDate) AS month, SUM(od.UnitPrice*od.Quantity*(1-od.Discount)) AS revenue FROM `Order Details` od JOIN Orders o ON o.OrderID=od.OrderID WHERE o.OrderDate >= '1997-01-01' AND o.OrderDate < '1998-01-01' GROUP BY month ORDER BY revenue DESC LIMIT 1;"
+      },
+      {
+        "question": "What is the total revenue for Beverages in Summer 1997?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\", \"category\":\"Beverages\", \"start_date\":\"1997-06-01\", \"end_date\":\"1997-09-01\"}",
+        "sql": "SELECT SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS total_revenue FROM `Order Details` od JOIN Products p ON p.ProductID = od.ProductID JOIN Categories c ON c.CategoryID = p.CategoryID JOIN Orders o ON o.OrderID = od.OrderID WHERE c.CategoryName='Beverages' AND o.OrderDate >= '1997-06-01' AND o.OrderDate < '1997-09-01';"
+      },
+      {
+        "question": "Average quantity per order in 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"avg_quantity\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT AVG(od.Quantity) FROM `Order Details` od JOIN Orders o ON o.OrderID=od.OrderID WHERE o.OrderDate>='1997-01-01' AND o.OrderDate<'1998-01-01';"
+      },
+      {
+        "question": "Total number of orders in 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"count_orders\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT COUNT(*) FROM Orders WHERE OrderDate>='1997-01-01' AND OrderDate<'1998-01-01';"
+      },
+      {
+        "question": "Revenue for Chai in 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\",\"product\":\"Chai\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT SUM(od.UnitPrice*od.Quantity*(1-od.Discount)) FROM `Order Details` od JOIN Products p ON p.ProductID=od.ProductID JOIN Orders o ON o.OrderID=od.OrderID WHERE p.ProductName='Chai' AND o.OrderDate >= '1997-01-01' AND o.OrderDate < '1998-01-01';"
+      },
+      {
+        "question": "What is the total quantity sold for Condiments in 1997?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"quantity\", \"category\":\"Condiments\", \"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT SUM(od.Quantity) FROM `Order Details` od JOIN Products p ON p.ProductID=od.ProductID JOIN Categories c ON c.CategoryID=p.CategoryID JOIN Orders o ON o.OrderID=od.OrderID WHERE c.CategoryName='Condiments' AND o.OrderDate >= '1997-01-01' AND o.OrderDate < '1998-01-01';"
+      },
+      {
+        "question": "Which product had the highest discount impact in 1997?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"discount_impact\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT p.ProductName, SUM(od.UnitPrice * od.Quantity * od.Discount) AS discount_value FROM `Order Details` od JOIN Products p ON p.ProductID=od.ProductID JOIN Orders o ON o.OrderID=od.OrderID WHERE o.OrderDate >= '1997-01-01' AND o.OrderDate < '1998-01-01' GROUP BY p.ProductName ORDER BY discount_value DESC LIMIT 1;"
+      },
+      {
+        "question": "Which product had the highest quantity sold in 1997?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"quantity\",\"group_by\":\"product\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT p.ProductName, SUM(od.Quantity) AS qty FROM `Order Details` od JOIN Products p ON p.ProductID=od.ProductID JOIN Orders o ON o.OrderID=od.OrderID WHERE o.OrderDate>='1997-01-01' AND o.OrderDate<'1998-01-01' GROUP BY p.ProductName ORDER BY qty DESC LIMIT 1;"
+      },
+      {
+        "question": "Revenue of each category in Summer 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\",\"group_by\":\"category\",\"start_date\":\"1997-06-01\",\"end_date\":\"1997-09-01\"}",
+        "sql": "SELECT c.CategoryName, SUM(od.UnitPrice*od.Quantity*(1-od.Discount)) AS revenue FROM `Order Details` od JOIN Products p ON p.ProductID=od.ProductID JOIN Categories c ON c.CategoryID=p.CategoryID JOIN Orders o ON o.OrderID=od.OrderID WHERE o.OrderDate>='1997-06-01' AND o.OrderDate<'1997-09-01' GROUP BY c.CategoryName;"
+      },
+      {
+        "question": "What is the average order value (AOV) during Winter 1997?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"aov\",\"start_date\":\"1997-01-01\",\"end_date\":\"1997-03-31\"}",
+        "sql": "SELECT SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) / COUNT(DISTINCT o.OrderID) AS aov FROM `Order Details` od JOIN Orders o ON o.OrderID = od.OrderID WHERE o.OrderDate >= '1997-01-01' AND o.OrderDate < '1997-03-31';"
+      },
+      {
+        "question": "List revenue per category for 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\",\"group_by\":\"category\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT c.CategoryName, SUM(od.UnitPrice*od.Quantity*(1-od.Discount)) AS revenue FROM `Order Details` od JOIN Products p ON p.ProductID=od.ProductID JOIN Categories c ON c.CategoryID=p.CategoryID JOIN Orders o ON o.OrderID=od.OrderID WHERE o.OrderDate >= '1997-01-01' AND o.OrderDate < '1998-01-01' GROUP BY c.CategoryName;"
+      },
+      {
+        "question": "Top customer by margin in 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"margin\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT c.CustomerID, (SUM(od.UnitPrice*od.Quantity*(1-od.Discount)) - SUM(od.UnitPrice*od.Quantity*0.7)) AS margin FROM Customers c JOIN Orders o ON c.CustomerID=o.CustomerID JOIN `Order Details` od ON o.OrderID=od.OrderID WHERE o.OrderDate >= '1997-01-01' AND o.OrderDate < '1998-01-01' GROUP BY c.CustomerID ORDER BY margin DESC LIMIT 1;"
+      },
+      {
+        "question": "Top 5 customers by quantity purchased in 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"quantity\",\"top_n\":5, \"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT c.CustomerID, SUM(od.Quantity) AS qty FROM Customers c JOIN Orders o ON c.CustomerID=o.CustomerID JOIN `Order Details` od ON o.OrderID=od.OrderID WHERE o.OrderDate >= '1997-01-01' AND o.OrderDate<'1998-01-01' GROUP BY c.CustomerID ORDER BY qty DESC LIMIT 5;"
+      },
+      {
+        "question": "Which customer had the highest revenue in 1997?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\", \"start_date\":\"1997-01-01\", \"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT c.CustomerID, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS revenue FROM Customers c JOIN Orders o ON c.CustomerID=o.CustomerID JOIN `Order Details` od ON o.OrderID=od.OrderID WHERE o.OrderDate >= '1997-01-01' AND o.OrderDate < '1998-01-01' GROUP BY c.CustomerID ORDER BY revenue DESC LIMIT 1;"
+      },
+      {
+        "question": "Which category had the highest quantity sold in Summer 1997?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"quantity\",\"group_by\":\"category\",\"start_date\":\"1997-06-01\",\"end_date\":\"1997-09-01\"}",
+        "sql": "SELECT c.CategoryName, SUM(od.Quantity) AS qty FROM `Order Details` od JOIN Orders o ON o.OrderID = od.OrderID JOIN Products p ON p.ProductID = od.ProductID JOIN Categories c ON c.CategoryID = p.CategoryID WHERE o.OrderDate >= '1997-06-01' AND o.OrderDate < '1997-09-01' GROUP BY c.CategoryName ORDER BY qty DESC LIMIT 1;"
+      },
+      {
+        "question": "List top 3 products by total revenue all time.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\", \"top_n\":3}",
+        "sql": "SELECT p.ProductName AS product, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS revenue FROM `Order Details` od JOIN Products p ON p.ProductID = od.ProductID GROUP BY p.ProductName ORDER BY revenue DESC LIMIT 3;"
+      },
+      {
+        "question": "Total revenue for all categories in Summer 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\",\"start_date\":\"1997-06-01\",\"end_date\":\"1997-09-01\"}",
+        "sql": "SELECT SUM(od.UnitPrice*od.Quantity*(1-od.Discount)) AS revenue FROM `Order Details` od JOIN Orders o ON o.OrderID=od.OrderID WHERE o.OrderDate >= '1997-06-01' AND o.OrderDate < '1997-09-01';"
+      },
+      {
+        "question": "What is the total revenue for Beverages in Summer 1997?",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\",\"category\":\"Beverages\",\"start_date\":\"1997-06-01\",\"end_date\":\"1997-09-01\"}",
+        "sql": "SELECT SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS total_revenue FROM `Order Details` od JOIN Orders o ON o.OrderID = od.OrderID JOIN Products p ON p.ProductID = od.ProductID JOIN Categories c ON c.CategoryID = p.CategoryID WHERE c.CategoryName = 'Beverages' AND o.OrderDate >= '1997-06-01' AND o.OrderDate < '1997-09-01';"
+      },
+      {
+        "question": "Top employee by sales in 1997.",
+        "schema": "",
+        "constraints_json": "{\"kpi\":\"revenue\",\"group_by\":\"employee\",\"start_date\":\"1997-01-01\",\"end_date\":\"1998-01-01\"}",
+        "sql": "SELECT e.EmployeeID, SUM(od.UnitPrice*od.Quantity*(1-od.Discount)) AS sales FROM Employees e JOIN Orders o ON e.EmployeeID=o.EmployeeID JOIN `Order Details` od ON od.OrderID=o.OrderID WHERE o.OrderDate>='1997-01-01' AND o.OrderDate<'1998-01-01' GROUP BY e.EmployeeID ORDER BY sales DESC LIMIT 1;"
+      }
+    ],
+    "signature": {
+      "instructions": "Generate a single valid SQLite query using the live schema.\n\nRules:\n- Use double quotes around the table name \"Order Details\".\n- Always join through Orders to access dates:\n    FROM \"Order Details\" od\n    JOIN Orders o ON o.OrderID = od.OrderID\n    JOIN Products p ON p.ProductID = od.ProductID\n    JOIN Categories c ON c.CategoryID = p.CategoryID\n- Use date ranges, e.g.:\n    o.OrderDate >= '1997-06-01' AND o.OrderDate < '1997-07-01'\n  instead of YEAR(), MONTH() etc.\n- Only use existing tables/columns from the schema.\n- Return a single SELECT statement, no comments, no CTEs.",
+      "fields": [
+        {
+          "prefix": "Question:",
+          "description": "${question}"
+        },
+        {
+          "prefix": "Schema:",
+          "description": "SQLite schema from PRAGMA, including tables Orders, 'Order Details', Products, Customers, Categories."
+        },
+        {
+          "prefix": "Constraints Json:",
+          "description": "JSON with inferred constraints (dates, KPI, category, etc.)."
+        },
+        {
+          "prefix": "Sql:",
+          "description": "A single SELECT statement compatible with SQLite, no comments."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.0.4",
+      "cloudpickle": "3.1"
+    }
+  }
+}
